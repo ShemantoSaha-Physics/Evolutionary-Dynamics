@@ -1,3 +1,4 @@
+#WS
 import numpy as np
 import random as rnd
 import networkx as nx
@@ -7,13 +8,11 @@ import csv
 import multiprocessing
 from functools import partial
 
-# Constants
 R0, S0, T0, P0 = 5.0, 1.0, 3.0, 0.0
 R1, S1, T1, P1 = 3.0, 0.0, 5.0, 1.0
 theta = 2.0
 epsilon = 0.1
 
-# Helper Functions
 def A(m):
     return (1 - m) * np.array([[R0, S0], [T0, P0]]) + m * np.array([[R1, S1], [T1, P1]])
 
@@ -191,13 +190,9 @@ def main():
     pool.close()
     pool.join()
 
-    # Flatten results and write all episode data
     all_data = [row for episode_data in results for row in episode_data]
-
-    # Convert to numpy array for averaging
     all_data_np = np.array(all_data)
 
-    # Calculate averages over episodes for each time point
     times = np.unique(all_data_np[:,0])
     avg_rows = []
     for time in times:
@@ -207,7 +202,6 @@ def main():
         mean_vals[-1] = -1
         avg_rows.append(mean_vals)
 
-    # Write all data + averages to CSV
     with open(csv_filename, mode='w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow([
