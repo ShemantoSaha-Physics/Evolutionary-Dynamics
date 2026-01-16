@@ -8,7 +8,6 @@ from functools import partial
 from scipy.stats import gaussian_kde
 import csv  
 
-# Constants
 R0, S0, T0, P0 = 5.0, 1.0, 3.0, 0.0
 R1, S1, T1, P1 = 3.0, 0.0, 5.0, 1.0
 theta = 2.0
@@ -143,10 +142,8 @@ def simulate_episode(population_size, initial_fraction=0.5, timesteps=100000, _=
     for t in range(timesteps):
         x = society.count_fraction()
         x_series.append(x)
-        # Feedback-evolving dynamics
         dm = epsilon * m * (1 - m) * ((1 + theta) * x - 1)
         m = np.clip(m + dm, 0, 1)
-        # Evolving payoff matrix and dilemma strengths
         A_evo = A(m)
         Dg_prime, Dr_prime = calculate_dilemma_strengths(A_evo)
         decision_maker.set_dilemma_strengths(Dg_prime, Dr_prime)
@@ -154,7 +151,7 @@ def simulate_episode(population_size, initial_fraction=0.5, timesteps=100000, _=
     return {'cooperator_fraction': np.array(x_series)}
 
 def compute_potential_landscape(x_series, grid_points=200, bandwidth=0.1):
-    x_series = x_series[int(0.1 * len(x_series)):]  # discard transient
+    x_series = x_series[int(0.1 * len(x_series)):]  
     kde = gaussian_kde(x_series, bw_method=bandwidth)
     x_grid = np.linspace(min(x_series), max(x_series), grid_points)
     density = kde(x_grid)
@@ -179,13 +176,10 @@ def main():
     well_depths = []
     barrier_heights = []
     well_positions = []
-
-    # For saving potential landscape data
     potential_landscape_rows = []
 
     plt.figure(figsize=(10,6))
     for N in population_sizes:
-        # Parallelize episodes for each population size
         with multiprocessing.Pool(processes=48) as pool:
             results = pool.map(
                 partial(simulate_episode, N, initial_fraction, timesteps),
@@ -200,11 +194,10 @@ def main():
         well_depths.append(well_depth)
         barrier_heights.append(barrier_height)
         well_positions.append(well_pos)
-        # Save landscape data for this N
+    
         for c, p in zip(centers, potential):
             potential_landscape_rows.append([N, c, p])
 
-    # Save potential landscape data to CSV
     with open('potential_landscape_data.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Population Size', 'Center', 'Potential'])
@@ -231,7 +224,6 @@ def main():
     plt.savefig('well_and_barrier_vs_population.png', dpi=300)
     plt.show()
 
-    # Save well depth, barrier height, and well position data to CSV
     with open('well_and_barrier_data.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Population Size', 'Well Depth', 'Barrier Height', 'Well Position'])
