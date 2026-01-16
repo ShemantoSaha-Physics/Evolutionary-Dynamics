@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import multiprocessing as mp
 
-# Constants
 R0, S0, T0, P0 = 5.0, 1.0, 3.0, 0.0
 R1, S1, T1, P1 = 3.0, 0.0, 5.0, 1.0
 theta = 2.0
