@@ -4,7 +4,6 @@ import random as rnd
 import pandas as pd
 from multiprocessing import Pool
 
-# Constants and helper functions (as in your code)
 R0, S0, T0, P0 = 5.0, 1.0, 3.0, 0.0
 R1, S1, T1, P1 = 3.0, 0.0, 5.0, 1.0
 theta = 2.0
@@ -131,8 +130,7 @@ def init_strategy(agents, init_c):
     for focal in agents:
         focal.strategy = "C" if focal.id in init_c else "D"
     return agents
-
-# --- Simulation function for one episode ---
+    
 def simulate_one_episode(args):
     num_agent, total_timesteps, save_every, initial_fraction = args
     society = Society(num_agent)
